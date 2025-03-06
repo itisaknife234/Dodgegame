@@ -101,16 +101,21 @@ def main():
     game_area = st.empty()
     col1, col2 = st.columns([1, 1])
     
+    move_direction = st.session_state.get("move_direction", None)
+    
     with col1:
         if st.button("LEFT"):
-            player.move("LEFT")
+            move_direction = "LEFT"
     with col2:
         if st.button("RIGHT"):
-            player.move("RIGHT")
+            move_direction = "RIGHT"
     
     while True:
         screen.fill((255, 255, 255))  # 화면 초기화
         screen.blit(background, (0, 0))
+        
+        if move_direction:
+            player.move(move_direction)
         
         score_text = font.render(f"Score: {score}", True, (0, 0, 0))
         screen.blit(score_text, (10, 10))
@@ -148,6 +153,9 @@ def main():
         clock.tick(FPS)
         
         time.sleep(1 / FPS)
+        
+        # 세션 상태 업데이트
+        st.session_state["move_direction"] = move_direction
 
 if __name__ == '__main__':
     main()
