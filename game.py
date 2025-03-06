@@ -12,12 +12,18 @@ pygame.init()
 
 # 화면 설정
 screen = pygame.Surface((MAX_WIDTH, MAX_HEIGHT))
-background = pygame.image.load("./background.png").convert()
-background = pygame.transform.scale(background, (MAX_WIDTH, MAX_HEIGHT))
-player_image = pygame.image.load("./miya.png").convert_alpha()
-enemy_image = pygame.image.load("./Dong.png").convert_alpha()
-bonus_image = pygame.image.load("./melon.png").convert_alpha()  # 보너스 아이템 이미지
-bonus_image = pygame.transform.scale(bonus_image, (40, 40))
+
+# 이미지 로드 (PIL을 사용하여 로드 후 Pygame으로 변환)
+def load_image(path, size=None):
+    img = Image.open(path).convert("RGBA")
+    if size:
+        img = img.resize(size, Image.ANTIALIAS)
+    return pygame.image.fromstring(img.tobytes(), img.size, "RGBA")
+
+background = load_image("background.png", (MAX_WIDTH, MAX_HEIGHT))
+player_image = load_image("miya.png", (60, 60))
+enemy_image = load_image("Dong.png", (45, 45))
+bonus_image = load_image("melon.png", (40, 40))
 
 font = pygame.font.Font(None, 36)
 
@@ -53,7 +59,7 @@ class Player():
         self.x = x
         self.y = y
         self.speed = 5
-        self.image = pygame.transform.scale(player_image, (60, 60))
+        self.image = player_image
         
     def draw(self):
         return screen.blit(self.image, (self.x, self.y))
@@ -66,7 +72,7 @@ class Enemy():
         self.x = random.randrange(0, MAX_WIDTH - 40)
         self.y = 50
         self.speed = random.randrange(10, 20)
-        self.image = pygame.transform.scale(enemy_image, (45, 45))
+        self.image = enemy_image
         
     def draw(self):
         return screen.blit(self.image, (self.x, self.y))
