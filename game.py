@@ -35,10 +35,10 @@ font = pygame.font.Font(None, 36)
 def show_message(messages):
     st.text("\n".join(messages))
 
-def player_move(keys, player, speed=5):
-    if keys[pygame.K_RIGHT] and player.x < MAX_WIDTH - 40:
+def player_move(direction, player, speed=5):
+    if direction == "RIGHT" and player.x < MAX_WIDTH - 40:
         player.x += speed
-    if keys[pygame.K_LEFT] and player.x > 0:
+    if direction == "LEFT" and player.x > 0:
         player.x -= speed
 
 class Player():
@@ -51,8 +51,8 @@ class Player():
     def draw(self):
         return screen.blit(self.image, (self.x, self.y))
     
-    def move(self, pressed_keys):
-        player_move(pressed_keys, self)
+    def move(self, direction):
+        player_move(direction, self)
 
 class Enemy():
     def __init__(self):
@@ -90,7 +90,7 @@ class BonusItem():
 def main():
     st.title("Dodge the POOP Game!")
     
-    show_message(["Press any arrow key to START!", "Dodge the POOP Eat melon for BONUS"])
+    show_message(["Press LEFT or RIGHT button to move!", "Dodge the POOP Eat melon for BONUS"])
 
     player = Player(MAX_WIDTH // 2, MAX_HEIGHT - 60)
     enemies = [Enemy()]
@@ -98,15 +98,17 @@ def main():
     score = 0
     clock = pygame.time.Clock()
     
-    # Streamlit 화면 업데이트를 위한 while loop
+    game_area = st.empty()
+    col1, col2 = st.columns([1, 1])
+    
+    with col1:
+        if st.button("LEFT"):
+            player.move("LEFT")
+    with col2:
+        if st.button("RIGHT"):
+            player.move("RIGHT")
+    
     while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return
-        
-        pressed_keys = pygame.key.get_pressed()
-        player.move(pressed_keys)
-        
         screen.fill((255, 255, 255))  # 화면 초기화
         screen.blit(background, (0, 0))
         
@@ -140,14 +142,12 @@ def main():
         img = Image.frombytes("RGB", (MAX_WIDTH, MAX_HEIGHT), img)
         
         # Streamlit으로 이미지 표시
-        st.image(img, use_container_width=True)
+        game_area.image(img, use_container_width=True)
         
         # 프레임 속도 조절
         clock.tick(FPS)
         
-        # Streamlit 인터페이스 갱신
         time.sleep(1 / FPS)
-        st.session_state['rerun'] = True
 
 if __name__ == '__main__':
     main()
