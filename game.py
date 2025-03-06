@@ -147,7 +147,7 @@ def main():
         
         # Streamlit 인터페이스 갱신
         time.sleep(1 / FPS)
-        st.experimental_rerun()
+        st.session_state['rerun'] = True
 
 if __name__ == '__main__':
     main()
