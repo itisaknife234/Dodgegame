@@ -3,6 +3,7 @@ import pygame
 import random
 import numpy as np
 from PIL import Image
+import time
 
 FPS = 60
 MAX_WIDTH = 500
@@ -32,25 +33,7 @@ bonus_image = load_image("melon.png", (40, 40))
 font = pygame.font.Font(None, 36)
 
 def show_message(messages):
-    y_offset = MAX_HEIGHT // 2 - 40
-    max_width = 0
-    text_surfaces = []
-    
-    for message in messages:
-        text = font.render(message, True, (0, 0, 0))
-        text_rect = text.get_rect(center=(MAX_WIDTH // 2, y_offset))
-        text_surfaces.append((text, text_rect))
-        max_width = max(max_width, text_rect.width)
-        y_offset += 40  
-    
-    box_width = max_width + 20
-    box_height = len(messages) * 40 + 20
-    box_rect = pygame.Rect((MAX_WIDTH // 2 - box_width // 2, MAX_HEIGHT // 2 - box_height // 2 + 20), (box_width, box_height))
-    pygame.draw.rect(screen, (255, 255, 255), box_rect)  
-    pygame.draw.rect(screen, (0, 0, 0), box_rect, 2)  
-    
-    for text, text_rect in text_surfaces:
-        screen.blit(text, text_rect)
+    st.text("\n".join(messages))
 
 def player_move(keys, player, speed=5):
     if keys[pygame.K_RIGHT] and player.x < MAX_WIDTH - 40:
@@ -107,16 +90,20 @@ class BonusItem():
 def main():
     st.title("Dodge the POOP Game!")
     
-    show_message(["","Press any arrow key to START!" , "Dodge the POOP Eat melon for BONUS"])
+    show_message(["Press any arrow key to START!", "Dodge the POOP Eat melon for BONUS"])
 
     player = Player(MAX_WIDTH // 2, MAX_HEIGHT - 60)
     enemies = [Enemy()]
     bonus_item = BonusItem()
     score = 0
+    clock = pygame.time.Clock()
     
     # Streamlit 화면 업데이트를 위한 while loop
-    running = True
-    while running:
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
+        
         pressed_keys = pygame.key.get_pressed()
         player.move(pressed_keys)
         
@@ -135,8 +122,8 @@ def main():
             enemy_rect = enemy.draw()
             enemy.move(score)
             if player_rect.colliderect(enemy_rect):
-                show_message(["!Game Over!", f"Your score: {score}", "Press any key to restart", "ESC to exit."])
-                running = False
+                show_message(["!Game Over!", f"Your score: {score}", "Restart the page to play again"])
+                return
         
         bonus_rect = bonus_item.draw()
         bonus_item.move()
@@ -154,6 +141,13 @@ def main():
         
         # Streamlit으로 이미지 표시
         st.image(img, use_container_width=True)
+        
+        # 프레임 속도 조절
+        clock.tick(FPS)
+        
+        # Streamlit 인터페이스 갱신
+        time.sleep(1 / FPS)
+        st.experimental_rerun()
 
 if __name__ == '__main__':
     main()
