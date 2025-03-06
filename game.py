@@ -15,10 +15,14 @@ screen = pygame.Surface((MAX_WIDTH, MAX_HEIGHT))
 
 # 이미지 로드 (PIL을 사용하여 로드 후 Pygame으로 변환)
 def load_image(path, size=None):
-    img = Image.open(path).convert("RGBA")
-    if size:
-        img = img.resize(size, Image.ANTIALIAS)
-    return pygame.image.fromstring(img.tobytes(), img.size, "RGBA")
+    try:
+        img = Image.open(path).convert("RGBA")
+        if size:
+            img = img.resize(size, Image.LANCZOS)
+        return pygame.image.frombuffer(img.tobytes(), img.size, "RGBA")
+    except Exception as e:
+        print(f"Error loading image {path}: {e}")
+        return pygame.Surface((size if size else (50, 50)))
 
 background = load_image("background.png", (MAX_WIDTH, MAX_HEIGHT))
 player_image = load_image("miya.png", (60, 60))
