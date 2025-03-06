@@ -12,11 +12,11 @@ pygame.init()
 
 # 화면 설정
 screen = pygame.Surface((MAX_WIDTH, MAX_HEIGHT))
-background = pygame.image.load("background.png").convert()
+background = pygame.image.load("./background.png").convert()
 background = pygame.transform.scale(background, (MAX_WIDTH, MAX_HEIGHT))
-player_image = pygame.image.load("miya.png").convert_alpha()
-enemy_image = pygame.image.load("Dong.png").convert_alpha()
-bonus_image = pygame.image.load("melon.png").convert_alpha()  # 보너스 아이템 이미지
+player_image = pygame.image.load("./miya.png").convert_alpha()
+enemy_image = pygame.image.load("./Dong.png").convert_alpha()
+bonus_image = pygame.image.load("./melon.png").convert_alpha()  # 보너스 아이템 이미지
 bonus_image = pygame.transform.scale(bonus_image, (40, 40))
 
 font = pygame.font.Font(None, 36)
