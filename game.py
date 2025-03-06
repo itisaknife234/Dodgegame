@@ -153,7 +153,7 @@ def main():
         img = Image.frombytes("RGB", (MAX_WIDTH, MAX_HEIGHT), img)
         
         # Streamlit으로 이미지 표시
-        st.image(img, use_column_width=True)
+        st.image(img, use_container_width=True)
 
 if __name__ == '__main__':
     main()
