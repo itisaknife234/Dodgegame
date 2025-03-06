@@ -1,8 +1,8 @@
 import streamlit as st
 import pygame
 import random
-import sys
 import numpy as np
+from PIL import Image
 
 FPS = 60
 MAX_WIDTH = 500
@@ -138,8 +138,12 @@ def main():
         
         score += 1
         
+        # Convert pygame surface to PIL Image for Streamlit display
+        img = pygame.image.tostring(screen, "RGB")
+        img = Image.frombytes("RGB", (MAX_WIDTH, MAX_HEIGHT), img)
+        
         # Streamlit으로 이미지 표시
-        st.image(pygame.surfarray.array3d(screen), channels="RGB", use_column_width=True)
+        st.image(img, use_column_width=True)
 
 if __name__ == '__main__':
     main()
