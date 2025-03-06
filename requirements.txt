@@ -1,3 +1,5 @@
 pygame
 streamlit
 pillow
+random
+numpy
